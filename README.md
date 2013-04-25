@@ -42,7 +42,7 @@ Run the dynamic_simple_form generator
 
 ```sh
 rails generate dynamic_simple_form product description:text sale:boolean
-``
+```
 
 ## Requirements
 
