@@ -101,7 +101,7 @@ describe DynamicSimpleForm do
 
     class Person < ActiveRecord::Base
       include DynamicSimpleForm
-      dynamic_simple_form(type_class: 'CustomType', field_class: 'CustomField', value_class: 'FieldValue')
+      dynamic_simple_form(type_class: 'CustomType', field_class: CustomField, value_class: 'FieldValue')
     end
 
     describe Person do

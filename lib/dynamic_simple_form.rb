@@ -7,9 +7,9 @@ module DynamicSimpleForm
   module ClassMethods
     def dynamic_simple_form(options = {})
       included_class_name = self.name
-      type_class_name = options[:type_class] || "#{included_class_name}Type"
-      field_class_name = options[:field_class] || "#{included_class_name}Field"
-      value_class_name = options[:value_class] || "#{included_class_name}FieldValue"
+      type_class_name = options[:type_class].try(:to_s) || "#{included_class_name}Type"
+      field_class_name = options[:field_class].try(:to_s) || "#{included_class_name}Field"
+      value_class_name = options[:value_class].try(:to_s) || "#{included_class_name}FieldValue"
 
       self.class_eval do
         belongs_to type_class_name.underscore.to_sym
