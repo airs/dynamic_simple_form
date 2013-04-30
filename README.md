@@ -31,7 +31,7 @@ class Product < ActiveRecord::Base
   dynamic_simple_form type_class: CustomType,   # default => ProductType
                       field_class: CustomField  # default => ProductField
                       value_class: FieldValue   # default => ProductFieldValue
-                      type_dependent: :nullfy   # default => :destroy
+                      type_dependent: :nullify   # default => :destroy
 
   # Model has also static fields
   validates :name, presence: true

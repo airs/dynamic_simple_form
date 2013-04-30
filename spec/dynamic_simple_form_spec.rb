@@ -4,9 +4,13 @@ require 'spec_helper'
 describe DynamicSimpleForm do
   ActiveRecord::Base.establish_connection adapter: 'sqlite3', database: ':memory:'
 
+  before :all do
+    # Migrationログを無効化
+    $stdout = StringIO.new
+  end
+
   context 'デフォルト設定のとき' do
     before :all do
-      $stdout = StringIO.new
       ActiveRecord::Schema.define(version: 1) do
         create_table :my_customer_types do |t|
         end
@@ -44,19 +48,19 @@ describe DynamicSimpleForm do
     describe MyCustomer do
       subject { MyCustomer.new }
       it { should belong_to(:my_customer_type) }
-      it { should have_many(:values).class_name('MyCustomerFieldValue') }
+      it { should have_many(:values).class_name('MyCustomerFieldValue').dependent(:destroy) }
     end
 
     describe MyCustomerType do
       subject { MyCustomerType.new }
-      it { should have_many(:my_customers) }
-      it { should have_many(:fields).class_name('MyCustomerField') }
+      it { should have_many(:my_customers).dependent(:destroy) }
+      it { should have_many(:fields).class_name('MyCustomerField').dependent(:destroy) }
     end
 
     describe MyCustomerField do
       subject { MyCustomerField.new }
       it { should belong_to(:my_customer_type) }
-      it { should have_many(:values).class_name('MyCustomerFieldValue') }
+      it { should have_many(:values).class_name('MyCustomerFieldValue').dependent(:destroy) }
     end
 
     describe MyCustomerFieldValue do
@@ -69,7 +73,6 @@ describe DynamicSimpleForm do
 
   context 'オプションでカスタマイズするとき' do
     before :all do
-      $stdout = StringIO.new
       ActiveRecord::Schema.define(version: 1) do
         create_table :custom_types do |t|
         end
@@ -101,7 +104,9 @@ describe DynamicSimpleForm do
 
     class Person < ActiveRecord::Base
       include DynamicSimpleForm
-      dynamic_simple_form(type_class: 'CustomType', field_class: CustomField, value_class: 'FieldValue')
+      dynamic_simple_form(type_class: 'CustomType', type_dependent: :nullify,
+                          field_class: CustomField,
+                          value_class: 'FieldValue')
     end
 
     describe Person do
@@ -112,7 +117,7 @@ describe DynamicSimpleForm do
 
     describe CustomType do
       subject { CustomType.new }
-      it { should have_many(:people) }
+      it { should have_many(:people).dependent(:nullify) }
       it { should have_many(:fields).class_name('CustomField') }
     end
 

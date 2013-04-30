@@ -7,23 +7,29 @@ module DynamicSimpleForm
   module ClassMethods
     def dynamic_simple_form(options = {})
       included_class_name = self.name
-      type_class_name = options[:type_class].try(:to_s) || "#{included_class_name}Type"
-      field_class_name = options[:field_class].try(:to_s) || "#{included_class_name}Field"
-      value_class_name = options[:value_class].try(:to_s) || "#{included_class_name}FieldValue"
+      options.reverse_merge!(
+          type_class: "#{included_class_name}Type", type_dependent: :destroy,
+          field_class: "#{included_class_name}Field",
+          value_class: "#{included_class_name}FieldValue"
+      )
+      type_class_name = options[:type_class].to_s
+      type_dependent = options[:type_dependent]
+      field_class_name = options[:field_class].to_s
+      value_class_name = options[:value_class].to_s
 
       self.class_eval do
         belongs_to type_class_name.underscore.to_sym
-        has_many :values, class_name: value_class_name
+        has_many :values, class_name: value_class_name, dependent: :destroy
       end
 
       type_class_name.constantize.class_eval do
-        has_many included_class_name.pluralize.underscore.to_sym
-        has_many :fields, class_name: field_class_name
+        has_many included_class_name.pluralize.underscore.to_sym, dependent: type_dependent
+        has_many :fields, class_name: field_class_name, dependent: :destroy
       end
 
       field_class_name.constantize.class_eval do
         belongs_to type_class_name.underscore.to_sym
-        has_many :values, class_name: value_class_name
+        has_many :values, class_name: value_class_name, dependent: :destroy
       end
 
       value_class_name.constantize.class_eval do
