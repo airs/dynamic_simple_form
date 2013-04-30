@@ -3,6 +3,7 @@ require 'spec_helper'
 
 describe DynamicSimpleForm do
   ActiveRecord::Base.establish_connection adapter: 'sqlite3', database: ':memory:'
+  ActiveRecord::Base.send(:include, DynamicSimpleForm)
 
   before :all do
     # Migrationログを無効化
@@ -41,7 +42,6 @@ describe DynamicSimpleForm do
     class MyCustomerFieldValue < ActiveRecord::Base; end
 
     class MyCustomer < ActiveRecord::Base
-      include DynamicSimpleForm
       dynamic_simple_form
     end
 
@@ -103,7 +103,6 @@ describe DynamicSimpleForm do
     class FieldValue < ActiveRecord::Base; end
 
     class Person < ActiveRecord::Base
-      include DynamicSimpleForm
       dynamic_simple_form(type_class: 'CustomType', type_dependent: :nullify,
                           field_class: CustomField,
                           value_class: 'FieldValue')

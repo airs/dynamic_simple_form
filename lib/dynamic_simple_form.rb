@@ -43,7 +43,7 @@ module DynamicSimpleForm
   class Railtie < Rails::Railtie
     initializer 'dynamic_simple_form.insert_into_active_record' do
       ActiveSupport.on_load :active_record do
-        ActiveRecord::send(:include, DynamicSimpleForm)
+        ActiveRecord::Base.send(:include, DynamicSimpleForm)
       end
     end
   end
