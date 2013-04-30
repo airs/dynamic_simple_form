@@ -6,6 +6,14 @@ module DynamicSimpleForm
 
   module ClassMethods
     def dynamic_simple_form
+      self_class = self
+
+      name = self_class.name.singularize.underscore
+      belongs_to :"#{name}_type"
+
+      "#{self.name}Type".constantize.class_eval do
+        has_many self_class.name.pluralize.underscore.to_sym
+      end
     end
   end
 
