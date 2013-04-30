@@ -6,13 +6,29 @@ module DynamicSimpleForm
 
   module ClassMethods
     def dynamic_simple_form
-      self_class = self
+      included_class_name = self.name
+      type_class_name = "#{included_class_name}Type"
+      field_class_name = "#{included_class_name}Field"
+      value_class_name = "#{included_class_name}FieldValue"
 
-      name = self_class.name.singularize.underscore
-      belongs_to :"#{name}_type"
+      self.class_eval do
+        belongs_to type_class_name.underscore.to_sym
+        has_many :values, class_name: value_class_name
+      end
 
-      "#{self.name}Type".constantize.class_eval do
-        has_many self_class.name.pluralize.underscore.to_sym
+      type_class_name.constantize.class_eval do
+        has_many included_class_name.pluralize.underscore.to_sym
+        has_many :fields, class_name: field_class_name
+      end
+
+      field_class_name.constantize.class_eval do
+        belongs_to type_class_name.underscore.to_sym
+        has_many :values, class_name: value_class_name
+      end
+
+      value_class_name.constantize.class_eval do
+        belongs_to included_class_name.underscore.to_sym
+        belongs_to :field, class_name: field_class_name, foreign_key: "#{field_class_name.underscore}_id"
       end
     end
   end
