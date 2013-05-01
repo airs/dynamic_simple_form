@@ -1,4 +1,7 @@
 require 'dynamic_simple_form/version'
+require 'dynamic_simple_form/type'
+require 'dynamic_simple_form/field'
+require 'dynamic_simple_form/field_value'
 
 module DynamicSimpleForm
   require 'active_support/concern'
@@ -24,7 +27,9 @@ module DynamicSimpleForm
 
       type_class_name.constantize.class_eval do
         has_many included_class_name.pluralize.underscore.to_sym, dependent: type_dependent
-        has_many :fields, class_name: field_class_name, dependent: :destroy
+        has_many :fields, order: :position, class_name: field_class_name, dependent: :destroy
+
+        include DynamicSimpleForm::Type
       end
 
       field_class_name.constantize.class_eval do

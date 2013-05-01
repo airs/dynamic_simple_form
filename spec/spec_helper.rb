@@ -17,7 +17,7 @@ RSpec.configure do |config|
   config.order = 'random'
 
   config.before do
-    DatabaseCleaner.strategy = :truncation
+    DatabaseCleaner.strategy = :transaction
   end
 
   config.after do
@@ -79,17 +79,13 @@ ActiveRecord::Schema.define(version: 1) do
   end
 end
 
-require 'dynamic_simple_form/type'
 class PersonType < ActiveRecord::Base
-  include DynamicSimpleForm::Type
 end
 
-require 'dynamic_simple_form/field'
 class PersonField < ActiveRecord::Base
   include DynamicSimpleForm::Field
 end
 
-require 'dynamic_simple_form/field_value'
 class PersonFieldValue < ActiveRecord::Base
   include DynamicSimpleForm::FieldValue
 end
