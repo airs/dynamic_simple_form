@@ -1,6 +1,8 @@
+require 'dynamic_simple_form/input/base'
+
 module DynamicSimpleForm
   module Input
-    class StringInput
+    class StringInput < Base
       def self.input_as
         'string'
       end

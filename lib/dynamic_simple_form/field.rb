@@ -1,11 +1,13 @@
 require 'dynamic_simple_form/input/string_input'
+require 'dynamic_simple_form/input/integer_input'
 
 module DynamicSimpleForm
   module Field
     extend ActiveSupport::Concern
 
     INPUTS = [
-        DynamicSimpleForm::Input::StringInput
+        DynamicSimpleForm::Input::StringInput,
+        DynamicSimpleForm::Input::IntegerInput
     ]
 
     included do
@@ -34,6 +36,23 @@ module DynamicSimpleForm
       INPUTS.find { |input_class|
         input_class.input_as == self.input_as
       }.try(:new)
+    end
+
+    def validate(field_value)
+      if required? && field_value.blank?
+        field_value.errors.add(input.column, :blank)
+      end
+
+      # TODO 他のフィールドに値が入っていないか
+      #self.class.other_value_columns.each do |other_column|
+      #  unless field_value[other_column].nil?
+      #    field_value.errors.add(other_column, :present)
+      #  end
+      #end
+
+      return if field_value.blank?
+
+      input.validate(field_value)
     end
   end
 end
