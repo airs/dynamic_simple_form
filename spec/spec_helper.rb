@@ -37,15 +37,15 @@ end
 $stdout = StringIO.new
 
 ActiveRecord::Schema.define(version: 1) do
-  # rails generate dynamic_simple_form customer
+  # rails generate dynamic_simple_form person
 
-  create_table :customer_types do |t|
+  create_table :person_types do |t|
     t.string :name, null: false
     t.timestamps
   end
 
-  create_table :customer_fields do |t|
-    t.references :customer_type, index: true, null: false
+  create_table :person_fields do |t|
+    t.references :person_type, index: true, null: false
     t.string :name, null: false
     t.string :label, null: false
     t.string :input_as, null: false
@@ -56,9 +56,9 @@ ActiveRecord::Schema.define(version: 1) do
     t.timestamps
   end
 
-  create_table :customer_field_values do |t|
-    t.references :customer, index: true, null: false
-    t.references :customer_field, index: true, null: false
+  create_table :person_field_values do |t|
+    t.references :person, index: true, null: false
+    t.references :person_field, index: true, null: false
     t.boolean :boolean_value
     t.string :string_value
     t.text :text_value
@@ -73,38 +73,38 @@ ActiveRecord::Schema.define(version: 1) do
     t.timestamps
   end
 
-  create_table :customers do |t|
-    t.references :customer_type, index: true
+  create_table :people do |t|
+    t.references :person_type, index: true
     t.timestamps
   end
 end
 
 require 'dynamic_simple_form/type'
-class CustomerType < ActiveRecord::Base
+class PersonType < ActiveRecord::Base
   include DynamicSimpleForm::Type
 end
 
 require 'dynamic_simple_form/field'
-class CustomerField < ActiveRecord::Base
+class PersonField < ActiveRecord::Base
   include DynamicSimpleForm::Field
 end
 
 require 'dynamic_simple_form/field_value'
-class CustomerFieldValue < ActiveRecord::Base
+class PersonFieldValue < ActiveRecord::Base
   include DynamicSimpleForm::FieldValue
 end
 
-class Customer < ActiveRecord::Base
+class Person < ActiveRecord::Base
   dynamic_simple_form
 end
 
 FactoryGirl.define do
-  factory :customer_type, class: 'CustomerType' do
-    sequence(:name) { |n| "CustomerType#{n}" }
+  factory :person_type, class: 'PersonType' do
+    sequence(:name) { |n| "PersonType#{n}" }
   end
 
-  factory :customer_field, class: 'CustomerField' do
-    customer_type
+  factory :person_field, class: 'PersonField' do
+    person_type
     sequence(:name) { |n| "PersonField#{n}" }
     sequence(:label) { |n| "Label#{n}" }
     input_as 'string'

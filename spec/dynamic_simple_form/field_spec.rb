@@ -3,8 +3,8 @@ require 'spec_helper'
 
 describe DynamicSimpleForm::Field do
   describe 'validations' do
-    subject { CustomerField.new }
-    before { create(:customer_field) }
+    subject { PersonField.new }
+    before { create(:person_field) }
 
     it { should validate_presence_of(:name) }
     it { should ensure_length_of(:name).is_at_most(255) }

@@ -71,40 +71,40 @@ describe DynamicSimpleForm do
           t.references :custom_type, index: true
         end
 
-        create_table :people do |t|
+        create_table :users do |t|
           t.references :custom_type, index: true
         end
 
         create_table :field_values do |t|
-          t.references :person, index: true
+          t.references :user, index: true
           t.references :custom_field, index: true
         end
       end
     end
 
     after :all do
-      drop_tables :field_values, :people, :custom_fields, :custom_types
+      drop_tables :field_values, :users, :custom_fields, :custom_types
     end
 
     class CustomType < ActiveRecord::Base; end
     class CustomField < ActiveRecord::Base; end
     class FieldValue < ActiveRecord::Base; end
 
-    class Person < ActiveRecord::Base
+    class User < ActiveRecord::Base
       dynamic_simple_form(type_class: 'CustomType', type_dependent: :nullify,
                           field_class: CustomField,
                           value_class: 'FieldValue')
     end
 
-    describe Person do
-      subject { Person.new }
+    describe User do
+      subject { User.new }
       it { should belong_to(:custom_type) }
       it { should have_many(:values).class_name('FieldValue') }
     end
 
     describe CustomType do
       subject { CustomType.new }
-      it { should have_many(:people).dependent(:nullify) }
+      it { should have_many(:users).dependent(:nullify) }
       it { should have_many(:fields).class_name('CustomField') }
     end
 
@@ -116,7 +116,7 @@ describe DynamicSimpleForm do
 
     describe FieldValue do
       subject { FieldValue.new }
-      it { should belong_to(:person) }
+      it { should belong_to(:user) }
       it { should belong_to(:field).class_name('CustomField') }
     end
   end
