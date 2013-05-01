@@ -2,14 +2,6 @@
 require 'spec_helper'
 
 describe DynamicSimpleForm do
-  ActiveRecord::Base.establish_connection adapter: 'sqlite3', database: ':memory:'
-  ActiveRecord::Base.send(:include, DynamicSimpleForm)
-
-  before :all do
-    # Migrationログを無効化
-    $stdout = StringIO.new
-  end
-
   context 'デフォルト設定のとき' do
     before :all do
       ActiveRecord::Schema.define(version: 1) do
@@ -28,12 +20,6 @@ describe DynamicSimpleForm do
           t.references :my_customer, index: true
           t.references :my_customer_field, index: true
         end
-      end
-    end
-
-    after :all do
-      ActiveRecord::Base.connection.tables.each do |table|
-        ActiveRecord::Base.connection.drop_table(table)
       end
     end
 
@@ -89,12 +75,6 @@ describe DynamicSimpleForm do
           t.references :person, index: true
           t.references :custom_field, index: true
         end
-      end
-    end
-
-    after :all do
-      ActiveRecord::Base.connection.tables.each do |table|
-        ActiveRecord::Base.connection.drop_table(table)
       end
     end
 
