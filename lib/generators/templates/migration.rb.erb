@@ -14,6 +14,7 @@ class CreateDynamicSimpleForm<%= table_name.camelize %> < ActiveRecord::Migratio
       t.integer :position, null: false
       t.string :options, null: false, default: ''
       t.boolean :required, null: false, default: false
+      t.boolean :show_in_list, null: false, default: false
 
       t.timestamps
     end

@@ -3,28 +3,22 @@ require 'spec_helper'
 
 describe DynamicSimpleForm do
   context 'デフォルト設定のとき' do
-    before :all do
-      ActiveRecord::Schema.define(version: 1) do
-        create_table :my_customer_types do |t|
-        end
-
-        create_table :my_customer_fields do |t|
-          t.references :my_customer_type, index: true
-        end
-
-        create_table :my_customers do |t|
-          t.references :my_customer_type, index: true
-        end
-
-        create_table :my_customer_field_values do |t|
-          t.references :my_customer, index: true
-          t.references :my_customer_field, index: true
-        end
+    ActiveRecord::Schema.define(version: 1) do
+      create_table :my_customer_types do |t|
       end
-    end
 
-    after :all do
-      drop_tables :my_customer_field_values, :my_customers, :my_customer_fields, :my_customer_types
+      create_table :my_customer_fields do |t|
+        t.references :my_customer_type, index: true
+      end
+
+      create_table :my_customers do |t|
+        t.references :my_customer_type, index: true
+      end
+
+      create_table :my_customer_field_values do |t|
+        t.references :my_customer, index: true
+        t.references :my_customer_field, index: true
+      end
     end
 
     class MyCustomerType < ActiveRecord::Base; end
@@ -62,28 +56,22 @@ describe DynamicSimpleForm do
 
 
   context 'オプションでカスタマイズするとき' do
-    before :all do
-      ActiveRecord::Schema.define(version: 1) do
-        create_table :custom_types do |t|
-        end
-
-        create_table :custom_fields do |t|
-          t.references :custom_type, index: true
-        end
-
-        create_table :users do |t|
-          t.references :custom_type, index: true
-        end
-
-        create_table :field_values do |t|
-          t.references :user, index: true
-          t.references :custom_field, index: true
-        end
+    ActiveRecord::Schema.define(version: 1) do
+      create_table :custom_types do |t|
       end
-    end
 
-    after :all do
-      drop_tables :field_values, :users, :custom_fields, :custom_types
+      create_table :custom_fields do |t|
+        t.references :custom_type, index: true
+      end
+
+      create_table :users do |t|
+        t.references :custom_type, index: true
+      end
+
+      create_table :field_values do |t|
+        t.references :user, index: true
+        t.references :custom_field, index: true
+      end
     end
 
     class CustomType < ActiveRecord::Base; end

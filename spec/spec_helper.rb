@@ -17,7 +17,7 @@ RSpec.configure do |config|
   config.order = 'random'
 
   config.before do
-    DatabaseCleaner.strategy = :transaction
+    DatabaseCleaner.strategy = :truncation
   end
 
   config.after do
@@ -25,12 +25,6 @@ RSpec.configure do |config|
   end
 
   config.include FactoryGirl::Syntax::Methods
-end
-
-def drop_tables(*tables)
-  tables.each do |table|
-    ActiveRecord::Base.connection.drop_table(table)
-  end
 end
 
 # Migrationログを無効化
@@ -52,6 +46,7 @@ ActiveRecord::Schema.define(version: 1) do
     t.integer :position, null: false
     t.string :options, null: false, default: ''
     t.boolean :required, null: false, default: false
+    t.boolean :show_in_list, null: false, default: false
 
     t.timestamps
   end
@@ -83,7 +78,6 @@ class PersonType < ActiveRecord::Base
 end
 
 class PersonField < ActiveRecord::Base
-  include DynamicSimpleForm::Field
 end
 
 class PersonFieldValue < ActiveRecord::Base
@@ -106,4 +100,10 @@ FactoryGirl.define do
     input_as 'string'
     sequence(:position)
   end
+end
+
+def add_field(type, *traits_and_attributes)
+  attributes = traits_and_attributes.extract_options!
+  traits = traits_and_attributes
+  type.fields.create!(attributes_for(:person_field, *traits, attributes))
 end

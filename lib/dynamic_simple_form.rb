@@ -35,6 +35,8 @@ module DynamicSimpleForm
       field_class_name.constantize.class_eval do
         belongs_to type_class_name.underscore.to_sym
         has_many :values, class_name: value_class_name, dependent: :destroy
+
+        include DynamicSimpleForm::Field
       end
 
       value_class_name.constantize.class_eval do
