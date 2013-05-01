@@ -4,8 +4,7 @@ require 'spec_helper'
 describe DynamicSimpleForm::Field do
   describe 'validations' do
     subject { CustomerField.new }
-    let(:customer_type){ CustomerType.create!(name: 'type') }
-    before { CustomerField.create!(name: 'field', label: 'label', input_as: 'text', position: 1, customer_type_id: customer_type.id) }
+    before { create(:customer_field) }
 
     it { should validate_presence_of(:name) }
     it { should ensure_length_of(:name).is_at_most(255) }

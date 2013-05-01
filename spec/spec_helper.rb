@@ -16,61 +16,66 @@ RSpec.configure do |config|
   #     --seed 1234
   config.order = 'random'
 
-  config.before :all do
-    # Migrationログを無効化
-    $stdout = StringIO.new
-  end
-
-  config.before :all do
-    ActiveRecord::Schema.define(version: 1) do
-      # rails generate dynamic_simple_form customer
-
-      create_table :customer_types do |t|
-        t.string :name, null: false
-        t.timestamps
-      end
-
-      create_table :customer_fields do |t|
-        t.references :customer_type, index: true, null: false
-        t.string :name, null: false
-        t.string :label, null: false
-        t.string :input_as, null: false
-        t.integer :position, null: false
-        t.string :options, null: false, default: ''
-        t.boolean :required, null: false, default: false
-
-        t.timestamps
-      end
-
-      create_table :customer_field_values do |t|
-        t.references :customer, index: true, null: false
-        t.references :customer_field, index: true, null: false
-        t.boolean :boolean_value
-        t.string :string_value
-        t.text :text_value
-        t.string :file_value
-        t.integer :integer_value
-        t.float :float_value
-        t.decimal :decimal_value
-        t.datetime :datetime_value
-        t.date :date_value
-        t.time :time_value
-
-        t.timestamps
-      end
-    end
-  end
-
-  config.after :all do
-    drop_all_tables
-  end
-
   config.before do
     DatabaseCleaner.strategy = :truncation
   end
 
   config.after do
     DatabaseCleaner.clean
+  end
+
+  config.include FactoryGirl::Syntax::Methods
+end
+
+def drop_tables(*tables)
+  tables.each do |table|
+    ActiveRecord::Base.connection.drop_table(table)
+  end
+end
+
+# Migrationログを無効化
+$stdout = StringIO.new
+
+ActiveRecord::Schema.define(version: 1) do
+  # rails generate dynamic_simple_form customer
+
+  create_table :customer_types do |t|
+    t.string :name, null: false
+    t.timestamps
+  end
+
+  create_table :customer_fields do |t|
+    t.references :customer_type, index: true, null: false
+    t.string :name, null: false
+    t.string :label, null: false
+    t.string :input_as, null: false
+    t.integer :position, null: false
+    t.string :options, null: false, default: ''
+    t.boolean :required, null: false, default: false
+
+    t.timestamps
+  end
+
+  create_table :customer_field_values do |t|
+    t.references :customer, index: true, null: false
+    t.references :customer_field, index: true, null: false
+    t.boolean :boolean_value
+    t.string :string_value
+    t.text :text_value
+    t.string :file_value
+    t.integer :integer_value
+    t.float :float_value
+    t.decimal :decimal_value
+    t.datetime :datetime_value
+    t.date :date_value
+    t.time :time_value
+
+    t.timestamps
+  end
+
+  create_table :customers do |t|
+    t.references :customer_type, index: true
+    t.timestamps
   end
 end
 
@@ -89,8 +94,20 @@ class CustomerFieldValue < ActiveRecord::Base
   include DynamicSimpleForm::FieldValue
 end
 
-def drop_all_tables
-  ActiveRecord::Base.connection.tables.each do |table|
-    ActiveRecord::Base.connection.drop_table(table)
+class Customer < ActiveRecord::Base
+  dynamic_simple_form
+end
+
+FactoryGirl.define do
+  factory :customer_type, class: 'CustomerType' do
+    sequence(:name) { |n| "CustomerType#{n}" }
+  end
+
+  factory :customer_field, class: 'CustomerField' do
+    customer_type
+    sequence(:name) { |n| "PersonField#{n}" }
+    sequence(:label) { |n| "Label#{n}" }
+    input_as 'string'
+    sequence(:position)
   end
 end

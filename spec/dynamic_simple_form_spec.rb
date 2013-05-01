@@ -23,6 +23,10 @@ describe DynamicSimpleForm do
       end
     end
 
+    after :all do
+      drop_tables :my_customer_field_values, :my_customers, :my_customer_fields, :my_customer_types
+    end
+
     class MyCustomerType < ActiveRecord::Base; end
     class MyCustomerField < ActiveRecord::Base; end
     class MyCustomerFieldValue < ActiveRecord::Base; end
@@ -76,6 +80,10 @@ describe DynamicSimpleForm do
           t.references :custom_field, index: true
         end
       end
+    end
+
+    after :all do
+      drop_tables :field_values, :people, :custom_fields, :custom_types
     end
 
     class CustomType < ActiveRecord::Base; end
