@@ -42,6 +42,9 @@ module DynamicSimpleForm
       value_class_name.constantize.class_eval do
         belongs_to included_class_name.underscore.to_sym
         belongs_to :field, class_name: field_class_name, foreign_key: "#{field_class_name.underscore}_id"
+
+        scope :ordered, -> { joins(:field).merge(field_class_name.constantize.ordered) }
+        scope :list_items, -> { joins(:field).merge(field_class_name.constantize.list_items) }
       end
     end
   end

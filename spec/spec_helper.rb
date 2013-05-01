@@ -100,10 +100,30 @@ FactoryGirl.define do
     input_as 'string'
     sequence(:position)
   end
+
+  factory :person do
+    person_type
+  end
+
+  factory :person_field_value_base, class: 'PersonFieldValue' do
+    person
+    field factory: :person_field
+
+    factory :person_field_value do
+      sequence(:string_value) { |n| "StringValue#{n}" }
+    end
+  end
 end
 
 def add_field(type, *traits_and_attributes)
   attributes = traits_and_attributes.extract_options!
   traits = traits_and_attributes
   type.fields.create!(attributes_for(:person_field, *traits, attributes))
+end
+
+def set_value(person, field_or_name, value)
+  field = field_or_name.is_a?(PersonField) ?
+      field_or_name :
+      person.person_type.fields.find_by!(name: field_or_name.to_s)
+  person.values.create!(attributes_for(:person_field_value_base, person_field_id: field.id, field.input.column => value))
 end

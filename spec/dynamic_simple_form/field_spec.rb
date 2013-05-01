@@ -17,7 +17,9 @@ describe DynamicSimpleForm::Field do
     it { should validate_presence_of(:label) }
     it { should ensure_length_of(:label).is_at_most(255) }
 
-    # TODO input_asについて
+    it { should validate_presence_of(:input_as) }
+    it { should ensure_length_of(:input_as).is_at_most(255) }
+    # TODO INPUTSに入っているものだけ
 
     it { should validate_presence_of(:position) }
     it { should validate_numericality_of(:position).only_integer }
@@ -52,6 +54,13 @@ describe DynamicSimpleForm::Field do
       field1 = add_field(type, show_in_list: true)
       field2 = add_field(type, show_in_list: false)
       PersonField.list_items.should == [field1]
+    end
+  end
+
+  describe '#input' do
+    it 'input_asに対応するInputオブジェクトを返す' do
+      field = add_field(type, input_as: 'string')
+      field.input.should be_a(DynamicSimpleForm::Input::StringInput)
     end
   end
 end
