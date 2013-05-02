@@ -4,10 +4,20 @@ require 'spec_helper'
 describe DynamicSimpleForm::FieldValue do
   let(:type) { create(:person_type) }
   let(:person) { create(:person, person_type: type) }
+  let(:field) { add_field(type, input_as: 'string') }
 
   describe 'validations' do
-    subject { create(:person_field_value) }
+    subject { set_value(person, field, 'a') }
     it { should validate_presence_of(:field) }
+
+    it 'typeに含まれないfieldのvalueを追加したらエラー' do
+      other_type = create(:person_type)
+      other_field = add_field(other_type, input_as: 'string')
+
+      value = set_value(person, other_field, 'a')
+      value.should be_invalid
+      value.errors[:field].should be_present
+    end
   end
 
   describe '.ordered' do

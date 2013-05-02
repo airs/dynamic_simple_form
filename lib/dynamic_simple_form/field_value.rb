@@ -16,7 +16,14 @@ module DynamicSimpleForm
     end
 
     def validate_field
-      field.validate(self) if field
+      return unless field
+
+      unless dynamic_value_root.dynamic_value_type.fields.include?(self.field)
+        errors.add(:field, :invalid)
+        return
+      end
+
+      field.validate(self)
     end
 
     def blank?
