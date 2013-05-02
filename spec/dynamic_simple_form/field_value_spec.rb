@@ -5,6 +5,11 @@ describe DynamicSimpleForm::FieldValue do
   let(:type) { create(:person_type) }
   let(:person) { create(:person, person_type: type) }
 
+  describe 'validations' do
+    subject { create(:person_field_value) }
+    it { should validate_presence_of(:field) }
+  end
+
   describe '.ordered' do
     it 'fieldのposition順' do
       field2 = add_field(type, position: 2)

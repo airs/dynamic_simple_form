@@ -39,6 +39,8 @@ module DynamicSimpleForm
     end
 
     def validate(field_value)
+      return unless input
+
       if required? && field_value.blank?
         field_value.errors.add(input.column, :blank)
       end

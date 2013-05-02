@@ -3,6 +3,7 @@ module DynamicSimpleForm
     extend ActiveSupport::Concern
 
     included do
+      validates :field, presence: true
       validate :validate_field
     end
 
@@ -15,8 +16,7 @@ module DynamicSimpleForm
     end
 
     def validate_field
-      # TODO fieldのvalidate
-      field.validate(self)
+      field.validate(self) if field
     end
 
     def blank?
