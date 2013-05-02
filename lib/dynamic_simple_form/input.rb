@@ -17,21 +17,21 @@ require 'dynamic_simple_form/input/time_zone_input'
 module DynamicSimpleForm
   module Input
     ALL_INPUTS = [
-        DynamicSimpleForm::Input::StringInput.instance,
-        DynamicSimpleForm::Input::EmailInput.instance,
-        DynamicSimpleForm::Input::UrlInput.instance,
-        DynamicSimpleForm::Input::TelInput.instance,
-        DynamicSimpleForm::Input::BooleanInput.instance,
-        DynamicSimpleForm::Input::TextInput.instance,
-        DynamicSimpleForm::Input::IntegerInput.instance,
-        DynamicSimpleForm::Input::FloatInput.instance,
-        DynamicSimpleForm::Input::DecimalInput.instance,
-        DynamicSimpleForm::Input::DatetimeInput.instance,
-        DynamicSimpleForm::Input::DateInput.instance,
-        DynamicSimpleForm::Input::TimeInput.instance,
-        DynamicSimpleForm::Input::SelectInput.instance,
-        DynamicSimpleForm::Input::RadioButtonsInput.instance,
-        DynamicSimpleForm::Input::TimeZoneInput.instance,
+        StringInput.instance,
+        EmailInput.instance,
+        UrlInput.instance,
+        TelInput.instance,
+        BooleanInput.instance,
+        TextInput.instance,
+        IntegerInput.instance,
+        FloatInput.instance,
+        DecimalInput.instance,
+        DatetimeInput.instance,
+        DateInput.instance,
+        TimeInput.instance,
+        SelectInput.instance,
+        RadioButtonsInput.instance,
+        TimeZoneInput.instance,
     ]
   end
 end
