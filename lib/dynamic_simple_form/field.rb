@@ -2,6 +2,10 @@ require 'dynamic_simple_form/input/string_input'
 require 'dynamic_simple_form/input/integer_input'
 require 'dynamic_simple_form/input/tel_input'
 require 'dynamic_simple_form/input/select_input'
+require 'dynamic_simple_form/input/email_input'
+require 'dynamic_simple_form/input/url_input'
+require 'dynamic_simple_form/input/boolean_input'
+require 'dynamic_simple_form/input/text_input'
 
 module DynamicSimpleForm
   module Field
@@ -11,7 +15,11 @@ module DynamicSimpleForm
         DynamicSimpleForm::Input::StringInput.instance,
         DynamicSimpleForm::Input::IntegerInput.instance,
         DynamicSimpleForm::Input::TelInput.instance,
-        DynamicSimpleForm::Input::SelectInput.instance
+        DynamicSimpleForm::Input::SelectInput.instance,
+        DynamicSimpleForm::Input::EmailInput.instance,
+        DynamicSimpleForm::Input::UrlInput.instance,
+        DynamicSimpleForm::Input::BooleanInput.instance,
+        DynamicSimpleForm::Input::TextInput.instance
     ]
 
     included do
