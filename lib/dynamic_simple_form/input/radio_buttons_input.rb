@@ -2,9 +2,9 @@ require 'dynamic_simple_form/input/selective_base'
 
 module DynamicSimpleForm
   module Input
-    class SelectInput < SelectiveBase
+    class RadioButtonsInput < SelectiveBase
       def input_as
-        'select'
+        'radio_buttons'
       end
     end
   end
