@@ -3,10 +3,6 @@ require 'dynamic_simple_form/input/base'
 module DynamicSimpleForm
   module Input
     class IntegerInput < Base
-      def input_as
-        'integer'
-      end
-
       def column
         :integer_value
       end

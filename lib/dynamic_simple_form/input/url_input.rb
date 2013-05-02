@@ -3,10 +3,6 @@ require 'dynamic_simple_form/input/string_base'
 module DynamicSimpleForm
   module Input
     class UrlInput < StringBase
-      def input_as
-        'url'
-      end
-
       def validate_string_value(field_value)
         unless valid_url?(field_value.value)
           field_value.errors.add(column, :invalid)

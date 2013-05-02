@@ -5,6 +5,10 @@ module DynamicSimpleForm
     class Base
       include Singleton
 
+      def input_as
+        self.class.name.split('::').last.sub(/Input/, '').underscore
+      end
+
       def value_blank?(field_value)
         field_value.value.blank?
       end
