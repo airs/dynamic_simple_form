@@ -22,5 +22,11 @@ module DynamicSimpleForm
     def blank?
       field.input.value_blank?(self)
     end
+
+    def value_text
+      field.input.value_text(self)
+    end
+
+    alias to_s value_text
   end
 end
