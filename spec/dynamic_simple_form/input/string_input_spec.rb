@@ -8,7 +8,6 @@ describe DynamicSimpleForm::Input::StringInput do
 
     subject { build_value('a') }
 
-    it_should_behave_like 'DynamicSimpleForm::Input::Base'
-    it { should ensure_length_of(:string_value).is_at_most(255) }
+    it_should_behave_like 'DynamicSimpleForm::Input::StringBase'
   end
 end

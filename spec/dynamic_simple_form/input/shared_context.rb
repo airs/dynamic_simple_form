@@ -28,3 +28,8 @@ shared_examples 'DynamicSimpleForm::Input::Base' do
     value.errors[other_column].should include(value.errors.generate_message(other_column, :present))
   end
 end
+
+shared_examples 'DynamicSimpleForm::Input::StringBase' do
+  it_should_behave_like 'DynamicSimpleForm::Input::Base'
+  it { should ensure_length_of(:string_value).is_at_most(255) }
+end
