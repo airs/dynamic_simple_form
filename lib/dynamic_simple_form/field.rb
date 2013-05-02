@@ -1,6 +1,7 @@
 require 'dynamic_simple_form/input/string_input'
 require 'dynamic_simple_form/input/integer_input'
 require 'dynamic_simple_form/input/tel_input'
+require 'dynamic_simple_form/input/select_input'
 
 module DynamicSimpleForm
   module Field
@@ -9,7 +10,8 @@ module DynamicSimpleForm
     INPUTS = [
         DynamicSimpleForm::Input::StringInput.instance,
         DynamicSimpleForm::Input::IntegerInput.instance,
-        DynamicSimpleForm::Input::TelInput.instance
+        DynamicSimpleForm::Input::TelInput.instance,
+        DynamicSimpleForm::Input::SelectInput.instance
     ]
 
     included do
