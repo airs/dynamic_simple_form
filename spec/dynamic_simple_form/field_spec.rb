@@ -19,8 +19,8 @@ describe DynamicSimpleForm::Field do
 
     it { should validate_presence_of(:input_as) }
     it { should ensure_length_of(:input_as).is_at_most(255) }
-    DynamicSimpleForm::Field::INPUTS.each do |allow_class|
-      it { should allow_value(allow_class.input_as).for(:input_as) }
+    DynamicSimpleForm::Input::ALL_INPUTS.each do |allow_input|
+      it { should allow_value(allow_input.input_as).for(:input_as) }
     end
     it { should_not allow_value('not_allow').for(:input_as) }
 
