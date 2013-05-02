@@ -3,7 +3,7 @@ require 'active_record'
 Bundler.require(:test, :default)
 
 ActiveRecord::Base.establish_connection adapter: 'sqlite3', database: ':memory:'
-ActiveRecord::Base.send(:include, DynamicSimpleForm)
+ActiveRecord::Base.send(:include, DynamicSimpleForm::Root)
 
 RSpec.configure do |config|
   config.treat_symbols_as_metadata_keys_with_true_values = true
@@ -81,7 +81,6 @@ class PersonField < ActiveRecord::Base
 end
 
 class PersonFieldValue < ActiveRecord::Base
-  include DynamicSimpleForm::FieldValue
 end
 
 class Person < ActiveRecord::Base

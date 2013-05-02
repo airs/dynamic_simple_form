@@ -1,7 +1,7 @@
 # coding: utf-8
 require 'spec_helper'
 
-describe DynamicSimpleForm do
+describe DynamicSimpleForm::Root do
   context 'デフォルト設定のとき' do
     ActiveRecord::Schema.define(version: 1) do
       create_table :my_customer_types do |t|
