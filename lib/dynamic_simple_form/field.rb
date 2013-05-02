@@ -6,6 +6,8 @@ require 'dynamic_simple_form/input/email_input'
 require 'dynamic_simple_form/input/url_input'
 require 'dynamic_simple_form/input/boolean_input'
 require 'dynamic_simple_form/input/text_input'
+require 'dynamic_simple_form/input/float_input'
+require 'dynamic_simple_form/input/decimal_input'
 
 module DynamicSimpleForm
   module Field
@@ -19,7 +21,9 @@ module DynamicSimpleForm
         DynamicSimpleForm::Input::EmailInput.instance,
         DynamicSimpleForm::Input::UrlInput.instance,
         DynamicSimpleForm::Input::BooleanInput.instance,
-        DynamicSimpleForm::Input::TextInput.instance
+        DynamicSimpleForm::Input::TextInput.instance,
+        DynamicSimpleForm::Input::FloatInput.instance,
+        DynamicSimpleForm::Input::DecimalInput.instance,
     ]
 
     included do

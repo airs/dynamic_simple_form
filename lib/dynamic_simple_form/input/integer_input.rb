@@ -14,13 +14,13 @@ module DynamicSimpleForm
       def validate(field_value)
         raw_value = field_value.value_before_type_cast.to_s
 
-        unless value = parse_raw_value_as_a_number(raw_value)
-          field_value.errors.add(field_value.field.input.column, :not_a_number, value: value)
+        unless parse_raw_value_as_a_number(raw_value)
+          field_value.errors.add(column, :not_a_number)
           return
         end
 
         unless raw_value =~ /\A[+-]?\d+\Z/
-          field_value.errors.add(field_value.field.input.column, :not_an_integer)
+          field_value.errors.add(column, :not_an_integer)
         end
       end
 
