@@ -3,7 +3,7 @@ require 'dynamic_simple_form/input/base'
 module DynamicSimpleForm
   module Input
     class IntegerInput < Base
-      def self.input_as
+      def input_as
         'integer'
       end
 

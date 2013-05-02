@@ -6,8 +6,8 @@ module DynamicSimpleForm
     extend ActiveSupport::Concern
 
     INPUTS = [
-        DynamicSimpleForm::Input::StringInput,
-        DynamicSimpleForm::Input::IntegerInput
+        DynamicSimpleForm::Input::StringInput.instance,
+        DynamicSimpleForm::Input::IntegerInput.instance
     ]
 
     included do
@@ -33,9 +33,11 @@ module DynamicSimpleForm
     end
 
     def input
-      INPUTS.find { |input_class|
-        input_class.input_as == self.input_as
-      }.try(:new)
+      INPUTS.find { |input_class| input_class.input_as == self.input_as }
+    end
+
+    def other_value_columns
+      INPUTS.map(&:column).uniq - [input.column]
     end
 
     def validate(field_value)
@@ -45,12 +47,11 @@ module DynamicSimpleForm
         field_value.errors.add(input.column, :blank)
       end
 
-      # TODO 他のフィールドに値が入っていないか
-      #self.class.other_value_columns.each do |other_column|
-      #  unless field_value[other_column].nil?
-      #    field_value.errors.add(other_column, :present)
-      #  end
-      #end
+      other_value_columns.each do |other_column|
+        unless field_value[other_column].nil?
+          field_value.errors.add(other_column, :present)
+        end
+      end
 
       return if field_value.blank?
 
