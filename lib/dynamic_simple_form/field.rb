@@ -8,6 +8,9 @@ require 'dynamic_simple_form/input/boolean_input'
 require 'dynamic_simple_form/input/text_input'
 require 'dynamic_simple_form/input/float_input'
 require 'dynamic_simple_form/input/decimal_input'
+require 'dynamic_simple_form/input/datetime_input'
+require 'dynamic_simple_form/input/date_input'
+require 'dynamic_simple_form/input/time_input'
 
 module DynamicSimpleForm
   module Field
@@ -24,6 +27,9 @@ module DynamicSimpleForm
         DynamicSimpleForm::Input::TextInput.instance,
         DynamicSimpleForm::Input::FloatInput.instance,
         DynamicSimpleForm::Input::DecimalInput.instance,
+        DynamicSimpleForm::Input::DatetimeInput.instance,
+        DynamicSimpleForm::Input::DateInput.instance,
+        DynamicSimpleForm::Input::TimeInput.instance,
     ]
 
     included do
