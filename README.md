@@ -20,6 +20,18 @@ rails generate simple_form:install
 
 ## Usage
 
+Add {model}_type_id to your model OR create new your model with {model}_type_id.
+
+```sh
+rails generate migration AddProductTypeIdToProducts product_type_id:references
+```
+
+OR
+
+```sh
+rails generate migration CreateProduct product_type_id:references [and your columns...]
+```
+
 Declare dynamic_simple_form in your model.
 
 ```ruby
@@ -62,7 +74,6 @@ mount DynamicSimpleForm::Engine => '/dynamic_simple_form'
 
 ## Todo
 
-1. create dynamic_simple_form declaretion
-2. create generator
-3. create engine
-
+1. create engine
+2. write lib/generators/USAGE
+3. support check_boxes

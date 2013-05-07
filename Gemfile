@@ -9,4 +9,6 @@ group :test, :development do
   gem 'activerecord'
   gem 'shoulda-matchers'
   gem 'tapp'
+  gem 'database_cleaner'
+  gem 'factory_girl'
 end
