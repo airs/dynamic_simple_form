@@ -5,6 +5,7 @@ require 'dynamic_simple_form/root'
 require 'dynamic_simple_form/type'
 require 'dynamic_simple_form/field'
 require 'dynamic_simple_form/field_value'
+require 'dynamic_simple_form/file_uploader'
 
 module DynamicSimpleForm
   class Railtie < Rails::Railtie
@@ -13,5 +14,9 @@ module DynamicSimpleForm
         ActiveRecord::Base.send(:include, DynamicSimpleForm::Root)
       end
     end
+  end
+
+  def self.root
+    Pathname(__FILE__).join('..', '..')
   end
 end

@@ -39,4 +39,18 @@ describe DynamicSimpleForm::FieldValue do
       PersonFieldValue.list_items.should == [value1]
     end
   end
+
+  describe '#file_value' do
+    let(:field) { add_field(type, input_as: 'file') }
+
+    it 'アップロードされたファイルを処理できる' do
+      value = set_value(person, field, uploaded_file)
+      File.should be_exist(value.value.path)
+    end
+
+    it 'nilならfile_valueはblankになる' do
+      value = set_value(person, field, nil)
+      value.file_value.should be_blank
+    end
+  end
 end

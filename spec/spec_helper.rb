@@ -126,3 +126,7 @@ def set_value(person, field_or_name, value)
       person.person_type.fields.find_by!(name: field_or_name.to_s)
   person.values.create(attributes_for(:person_field_value_base, person_field_id: field.id, field.input.column => value))
 end
+
+def uploaded_file(filename = 'rails.png', mime_type = 'image/png')
+  Rack::Test::UploadedFile.new(DynamicSimpleForm.root.join('spec', filename), mime_type)
+end

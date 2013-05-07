@@ -1,3 +1,6 @@
+require 'carrierwave'
+require 'carrierwave/orm/activerecord'
+
 module DynamicSimpleForm
   module FieldValue
     extend ActiveSupport::Concern
@@ -5,6 +8,7 @@ module DynamicSimpleForm
     included do
       validates :field, presence: true
       validate :validate_field
+      mount_uploader :file_value, DynamicSimpleForm::FileUploader
     end
 
     def value

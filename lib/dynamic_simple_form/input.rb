@@ -13,6 +13,7 @@ require 'dynamic_simple_form/input/time_input'
 require 'dynamic_simple_form/input/select_input'
 require 'dynamic_simple_form/input/radio_buttons_input'
 require 'dynamic_simple_form/input/time_zone_input'
+require 'dynamic_simple_form/input/file_input'
 
 module DynamicSimpleForm
   module Input
@@ -32,6 +33,7 @@ module DynamicSimpleForm
         SelectInput.instance,
         RadioButtonsInput.instance,
         TimeZoneInput.instance,
+        FileInput.instance,
     ]
   end
 end
