@@ -108,4 +108,17 @@ describe DynamicSimpleForm::Root do
       it { should belong_to(:field).class_name('CustomField') }
     end
   end
+
+  describe '#dynamic' do
+    it 'field.nameとvalueのHashを返す' do
+      type = create(:person_type)
+      str_field = add_field(type, name: 'str', input_as: 'string')
+      int_field = add_field(type, name: 'int', input_as: 'integer')
+      person = create(:person, person_type: type)
+      set_value(person, str_field, 'MyString')
+      set_value(person, int_field, 10)
+      person.dynamic.should == { 'str' => 'MyString', 'int' => 10 }
+      person.dynamic[:str].should == 'MyString'
+    end
+  end
 end

@@ -47,5 +47,11 @@ module DynamicSimpleForm
         end
       end
     end
+
+    def dynamic
+      values.each_with_object(HashWithIndifferentAccess.new) do |value, hash|
+        hash[value.field.name] = value.value
+      end
+    end
   end
 end
