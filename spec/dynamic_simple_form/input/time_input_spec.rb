@@ -12,6 +12,11 @@ describe DynamicSimpleForm::Input::TimeInput do
 
   describe '#value_text' do
     subject { build_value('2013-5-2 12:45:30') }
-    # TODO timeの文字列表記
+    around do |example|
+      with_translations time: { formats: { time_input_value: '%H:%M' } } do
+        example.run
+      end
+    end
+    its(:value_text) { should == '12:45' }
   end
 end

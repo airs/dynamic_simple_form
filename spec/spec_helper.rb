@@ -130,3 +130,10 @@ end
 def uploaded_file(filename = 'rails.png', mime_type = 'image/png')
   Rack::Test::UploadedFile.new(DynamicSimpleForm.root.join('spec', filename), mime_type)
 end
+
+def with_translations(translations, &block)
+  I18n.backend.store_translations I18n.locale, translations
+  yield
+ensure
+  I18n.reload!
+end
