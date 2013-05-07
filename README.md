@@ -62,7 +62,6 @@ mount DynamicSimpleForm::Engine => '/dynamic_simple_form'
 
 ## Todo
 
-1. create dynamic_simple_form declaretion
-2. create generator
-3. create engine
-
+1. create engine
+3. write USAGE
+2. support check_boxes
