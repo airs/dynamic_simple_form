@@ -13,13 +13,13 @@ end
 
 shared_examples 'DynamicSimpleForm::Input::Base' do
   context 'fieldがrequiredのとき' do
-    let(:field) { add_field(type, input_as: 'string', required: true) }
-    it { should validate_presence_of(:string_value) }
+    let(:field_attributes) { { required: true } }
+    it { should validate_presence_of(field.input.column) }
   end
 
   context 'fieldがrequiredでないとき' do
-    let(:field) { add_field(type, input_as: 'integer', required: false) }
-    it { should_not validate_presence_of(:string_value) }
+    let(:field_attributes) { { required: false } }
+    it { should_not validate_presence_of(field.input.column) }
   end
 
   it '型に対応するフィールド以外に値が入っていたらエラー' do
