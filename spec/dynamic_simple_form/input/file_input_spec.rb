@@ -15,9 +15,4 @@ describe DynamicSimpleForm::Input::FileInput do
       it { should validate_presence_of(:file_value) }
     end
   end
-
-  describe '#value_text' do
-    subject { build_value(uploaded_file) }
-    its(:value_text){ should == 'rails.png' }
-  end
 end

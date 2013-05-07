@@ -14,9 +14,4 @@ describe DynamicSimpleForm::Input::DecimalInput do
                           valid: %w[0.1 1 -1.0 +1.0 .1],
                           invalid: %w[a 0.a １ 1+1 0. 0x1 1e-1 0.0.0]
   end
-
-  describe '#value_text' do
-    subject { build_value('+.0000000000000001') }
-    its(:value_text){ should == '0.0000000000000001' }
-  end
 end

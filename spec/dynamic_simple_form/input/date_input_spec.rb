@@ -11,9 +11,4 @@ describe DynamicSimpleForm::Input::DateInput do
 
     it_should_behave_like 'DynamicSimpleForm::Input::Base'
   end
-
-  describe '#value_text' do
-    subject { build_value('2013-05-02') }
-    its(:value_text){ should == I18n.l(Date.new(2013, 5, 2)) }
-  end
 end

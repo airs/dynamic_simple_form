@@ -13,9 +13,4 @@ describe DynamicSimpleForm::Input::EmailInput do
                           valid: %w[foo@bar.com user+some@gmail.com],
                           invalid: %w[a foo@bar あ@foo.com]
   end
-
-  describe '#value_text' do
-    subject { build_value('mail@example.com') }
-    its(:value_text){ should == 'mail@example.com' }
-  end
 end

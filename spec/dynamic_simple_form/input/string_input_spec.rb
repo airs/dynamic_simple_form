@@ -9,9 +9,4 @@ describe DynamicSimpleForm::Input::StringInput do
     subject { build_value('a') }
     it_should_behave_like 'DynamicSimpleForm::Input::StringBase'
   end
-
-  describe '#value_text' do
-    subject { build_value('foo') }
-    its(:value_text){ should == 'foo' }
-  end
 end

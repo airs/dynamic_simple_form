@@ -13,9 +13,4 @@ describe DynamicSimpleForm::Input::UrlInput do
                           valid: %w[http://example.com https://example.com],
                           invalid: %w[http: http:/ http:// foobar ftp://example.com mailto:foo@bar.baz mailto:]
   end
-
-  describe '#value_text' do
-    subject { build_value('http://example.com/foo') }
-    its(:value_text){ should == 'http://example.com/foo' }
-  end
 end

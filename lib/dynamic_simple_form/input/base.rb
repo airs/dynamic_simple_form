@@ -16,10 +16,6 @@ module DynamicSimpleForm
       def validate(field_value)
         # override
       end
-
-      def value_text(field_value)
-        field_value.value.to_s
-      end
     end
   end
 end

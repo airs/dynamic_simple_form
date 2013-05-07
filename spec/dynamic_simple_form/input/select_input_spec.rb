@@ -12,9 +12,4 @@ describe DynamicSimpleForm::Input::SelectInput do
     it_should_behave_like 'DynamicSimpleForm::Input::StringBase'
     it_should_behave_like 'validを受け入れinvalidを受け入れない', valid: %w(Male Female), invalid: %w(male Foo)
   end
-
-  describe '#value_text' do
-    subject { build_value('Male') }
-    its(:value_text){ should == 'Male' }
-  end
 end

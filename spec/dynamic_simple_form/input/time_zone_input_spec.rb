@@ -11,9 +11,4 @@ describe DynamicSimpleForm::Input::TimeZoneInput do
     it_should_behave_like 'DynamicSimpleForm::Input::StringBase'
     it_should_behave_like 'validを受け入れinvalidを受け入れない', valid: ['Tokyo', 'American Samoa'], invalid: %w[a tokyo]
   end
-
-  describe '#value_text' do
-    subject { build_value('Tokyo') }
-    its(:value_text){ should == 'Tokyo' } # TODO localize?
-  end
 end

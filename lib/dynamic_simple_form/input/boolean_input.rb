@@ -6,10 +6,6 @@ module DynamicSimpleForm
       def column
         :boolean_value
       end
-
-      def value_text(field_value)
-        I18n.t(field_value.value.to_s)
-      end
     end
   end
 end

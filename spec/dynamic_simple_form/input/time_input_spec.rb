@@ -9,14 +9,4 @@ describe DynamicSimpleForm::Input::TimeInput do
     subject { build_value('') }
     it_should_behave_like 'DynamicSimpleForm::Input::Base'
   end
-
-  describe '#value_text' do
-    subject { build_value('2013-5-2 12:45:30') }
-    around do |example|
-      with_translations time: { formats: { time_input_value: '%H:%M' } } do
-        example.run
-      end
-    end
-    its(:value_text) { should == '12:45' }
-  end
 end

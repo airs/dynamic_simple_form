@@ -6,10 +6,6 @@ module DynamicSimpleForm
       def column
         :time_value
       end
-
-      def value_text(field_value)
-        I18n.l(field_value.value, format: :time_input_value)
-      end
     end
   end
 end
