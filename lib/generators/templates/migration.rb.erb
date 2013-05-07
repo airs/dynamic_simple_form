@@ -1,0 +1,39 @@
+class CreateDynamicSimpleForm<%= table_name.camelize %> < ActiveRecord::Migration
+  def change
+    create_table :<%= singular_table_name %>_types do |t|
+      t.string :name, null: false
+
+      t.timestamps
+    end
+
+    create_table :<%= singular_table_name %>_fields do |t|
+      t.references :<%= singular_table_name %>_type, index: true, null: false
+      t.string :name, null: false
+      t.string :label, null: false
+      t.string :input_as, null: false
+      t.integer :position, null: false
+      t.string :options, null: false, default: ''
+      t.boolean :required, null: false, default: false
+      t.boolean :show_in_list, null: false, default: false
+
+      t.timestamps
+    end
+
+    create_table :<%= singular_table_name %>_field_values do |t|
+      t.references :<%= singular_table_name %>, index: true, null: false
+      t.references :<%= singular_table_name %>_field, index: true, null: false
+      t.boolean :boolean_value
+      t.string :string_value
+      t.text :text_value
+      t.string :file_value
+      t.integer :integer_value
+      t.float :float_value
+      t.decimal :decimal_value
+      t.datetime :datetime_value
+      t.date :date_value
+      t.time :time_value
+
+      t.timestamps
+    end
+  end
+end

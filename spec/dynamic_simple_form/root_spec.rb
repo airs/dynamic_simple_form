@@ -1,39 +1,23 @@
 # coding: utf-8
 require 'spec_helper'
 
-describe DynamicSimpleForm do
-  ActiveRecord::Base.establish_connection adapter: 'sqlite3', database: ':memory:'
-  ActiveRecord::Base.send(:include, DynamicSimpleForm)
-
-  before :all do
-    # Migrationログを無効化
-    $stdout = StringIO.new
-  end
-
+describe DynamicSimpleForm::Root do
   context 'デフォルト設定のとき' do
-    before :all do
-      ActiveRecord::Schema.define(version: 1) do
-        create_table :my_customer_types do |t|
-        end
-
-        create_table :my_customer_fields do |t|
-          t.references :my_customer_type, index: true
-        end
-
-        create_table :my_customers do |t|
-          t.references :my_customer_type, index: true
-        end
-
-        create_table :my_customer_field_values do |t|
-          t.references :my_customer, index: true
-          t.references :my_customer_field, index: true
-        end
+    ActiveRecord::Schema.define(version: 1) do
+      create_table :my_customer_types do |t|
       end
-    end
 
-    after :all do
-      ActiveRecord::Base.connection.tables.each do |table|
-        ActiveRecord::Base.connection.drop_table(table)
+      create_table :my_customer_fields do |t|
+        t.references :my_customer_type, index: true
+      end
+
+      create_table :my_customers do |t|
+        t.references :my_customer_type, index: true
+      end
+
+      create_table :my_customer_field_values do |t|
+        t.references :my_customer, index: true
+        t.references :my_customer_field, index: true
       end
     end
 
@@ -72,29 +56,21 @@ describe DynamicSimpleForm do
 
 
   context 'オプションでカスタマイズするとき' do
-    before :all do
-      ActiveRecord::Schema.define(version: 1) do
-        create_table :custom_types do |t|
-        end
-
-        create_table :custom_fields do |t|
-          t.references :custom_type, index: true
-        end
-
-        create_table :people do |t|
-          t.references :custom_type, index: true
-        end
-
-        create_table :field_values do |t|
-          t.references :person, index: true
-          t.references :custom_field, index: true
-        end
+    ActiveRecord::Schema.define(version: 1) do
+      create_table :custom_types do |t|
       end
-    end
 
-    after :all do
-      ActiveRecord::Base.connection.tables.each do |table|
-        ActiveRecord::Base.connection.drop_table(table)
+      create_table :custom_fields do |t|
+        t.references :custom_type, index: true
+      end
+
+      create_table :users do |t|
+        t.references :custom_type, index: true
+      end
+
+      create_table :field_values do |t|
+        t.references :user, index: true
+        t.references :custom_field, index: true
       end
     end
 
@@ -102,21 +78,21 @@ describe DynamicSimpleForm do
     class CustomField < ActiveRecord::Base; end
     class FieldValue < ActiveRecord::Base; end
 
-    class Person < ActiveRecord::Base
+    class User < ActiveRecord::Base
       dynamic_simple_form(type_class: 'CustomType', type_dependent: :nullify,
                           field_class: CustomField,
                           value_class: 'FieldValue')
     end
 
-    describe Person do
-      subject { Person.new }
+    describe User do
+      subject { User.new }
       it { should belong_to(:custom_type) }
       it { should have_many(:values).class_name('FieldValue') }
     end
 
     describe CustomType do
       subject { CustomType.new }
-      it { should have_many(:people).dependent(:nullify) }
+      it { should have_many(:users).dependent(:nullify) }
       it { should have_many(:fields).class_name('CustomField') }
     end
 
@@ -128,8 +104,21 @@ describe DynamicSimpleForm do
 
     describe FieldValue do
       subject { FieldValue.new }
-      it { should belong_to(:person) }
+      it { should belong_to(:user) }
       it { should belong_to(:field).class_name('CustomField') }
+    end
+  end
+
+  describe '#dynamic' do
+    it 'field.nameとvalueのHashを返す' do
+      type = create(:person_type)
+      str_field = add_field(type, name: 'str', input_as: 'string')
+      int_field = add_field(type, name: 'int', input_as: 'integer')
+      person = create(:person, person_type: type)
+      set_value(person, str_field, 'MyString')
+      set_value(person, int_field, 10)
+      person.dynamic.should == { 'str' => 'MyString', 'int' => 10 }
+      person.dynamic[:str].should == 'MyString'
     end
   end
 end
