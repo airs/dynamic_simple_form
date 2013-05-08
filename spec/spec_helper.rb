@@ -35,11 +35,12 @@ ActiveRecord::Schema.define(version: 1) do
 
   create_table :person_types do |t|
     t.string :name, null: false
+
     t.timestamps
   end
 
   create_table :person_fields do |t|
-    t.references :person_type, index: true, null: false
+    t.references :person_type, null: false
     t.string :name, null: false
     t.string :label, null: false
     t.string :input_as, null: false
@@ -50,10 +51,11 @@ ActiveRecord::Schema.define(version: 1) do
 
     t.timestamps
   end
+  add_index :person_fields, :person_type_id
 
   create_table :person_field_values do |t|
-    t.references :person, index: true, null: false
-    t.references :person_field, index: true, null: false
+    t.references :person, null: false
+    t.references :person_field, null: false
     t.boolean :boolean_value
     t.string :string_value
     t.text :text_value
@@ -67,6 +69,8 @@ ActiveRecord::Schema.define(version: 1) do
 
     t.timestamps
   end
+  add_index :person_field_values, :person_id
+  add_index :person_field_values, :person_field_id
 
   create_table :people do |t|
     t.references :person_type, index: true
