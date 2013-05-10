@@ -20,7 +20,7 @@ module DynamicSimpleForm
     end
 
     def validate_field
-      return unless field
+      return unless field && dynamic_value_root
 
       unless dynamic_value_root.dynamic_value_type.fields.include?(self.field)
         errors.add(:field, :invalid)
