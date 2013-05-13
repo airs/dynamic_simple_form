@@ -7,7 +7,7 @@ class CreateDynamicSimpleForm<%= table_name.camelize %> < ActiveRecord::Migratio
     end
 
     create_table :<%= singular_table_name %>_fields do |t|
-      t.references :<%= singular_table_name %>_type, index: true, null: false
+      t.references :<%= singular_table_name %>_type, null: false
       t.string :name, null: false
       t.string :label, null: false
       t.string :input_as, null: false
@@ -18,10 +18,11 @@ class CreateDynamicSimpleForm<%= table_name.camelize %> < ActiveRecord::Migratio
 
       t.timestamps
     end
+    add_index :<%= singular_table_name %>_fields, :<%= singular_table_name %>_type_id
 
     create_table :<%= singular_table_name %>_field_values do |t|
-      t.references :<%= singular_table_name %>, index: true, null: false
-      t.references :<%= singular_table_name %>_field, index: true, null: false
+      t.references :<%= singular_table_name %>, null: false
+      t.references :<%= singular_table_name %>_field, null: false
       t.boolean :boolean_value
       t.string :string_value
       t.text :text_value
@@ -35,5 +36,7 @@ class CreateDynamicSimpleForm<%= table_name.camelize %> < ActiveRecord::Migratio
 
       t.timestamps
     end
+    add_index :<%= singular_table_name %>_field_values, :<%= singular_table_name %>_id
+    add_index :<%= singular_table_name %>_field_values, :<%= singular_table_name %>_field_id
   end
 end

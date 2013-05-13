@@ -40,6 +40,8 @@ module DynamicSimpleForm
           alias_method :dynamic_value_root, root_class_name.underscore.to_sym
           belongs_to :field, class_name: field_class_name, foreign_key: "#{field_class_name.underscore}_id"
 
+          validates root_class_name.underscore.to_sym, presence: true
+
           scope :ordered, -> { joins(:field).merge(field_class_name.constantize.ordered) }
           scope :list_items, -> { joins(:field).merge(field_class_name.constantize.list_items) }
 

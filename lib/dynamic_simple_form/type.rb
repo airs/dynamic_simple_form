@@ -7,7 +7,7 @@ module DynamicSimpleForm
     included do
       accepts_nested_attributes_for :fields, allow_destroy: true
 
-      validates :name, presence: true, uniqueness: true, length: { maximum: 255 }
+      validates :name, presence: true, length: { maximum: 255 }
       validate :fields_uniqueness
 
       before_save :normalize_fields_position
