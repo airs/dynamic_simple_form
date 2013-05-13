@@ -18,6 +18,8 @@ describe DynamicSimpleForm::FieldValue do
       value.should be_invalid
       value.errors[:field].should be_present
     end
+
+    it { should validate_presence_of(:person) }
   end
 
   describe '.ordered' do
