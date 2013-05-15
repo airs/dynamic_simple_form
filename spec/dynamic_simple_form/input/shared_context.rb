@@ -1,8 +1,8 @@
 # coding: utf-8
 
 shared_context 'descibed_classに対応するPersonFieldValueをbuild_valueで生成できる' do
-  let(:type) { create(:person_type) }
-  let(:person) { create(:person, person_type: type) }
+  let!(:type) { create(:person_type) }
+  let!(:person) { create(:person, person_type: type) }
   let(:field) { add_field(type, attributes_for(:person_field, field_attributes.merge(input_as: described_class.instance.input_as))) }
   let(:field_attributes) { {} }
 

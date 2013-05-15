@@ -19,6 +19,7 @@ module DynamicSimpleForm
           belongs_to type_class_name.underscore.to_sym
           alias_method :dynamic_value_type, type_class_name.underscore.to_sym
           has_many :values, class_name: value_class_name, dependent: :destroy
+          validate :validate_missing_value
         end
 
         type_class_name.constantize.class_eval do
@@ -46,6 +47,18 @@ module DynamicSimpleForm
           scope :list_items, -> { joins(:field).merge(field_class_name.constantize.list_items) }
 
           include DynamicSimpleForm::FieldValue
+        end
+      end
+    end
+
+    def validate_missing_value
+      return unless dynamic_value_type
+
+      dynamic_value_type.fields.where(required: true).each do |field|
+        value = values.find { |v| v.field == field }
+        if value.nil?
+          errors.add(:values, :blank)
+          return
         end
       end
     end
