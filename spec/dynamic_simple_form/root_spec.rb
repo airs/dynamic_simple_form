@@ -109,6 +109,20 @@ describe DynamicSimpleForm::Root do
     end
   end
 
+  describe 'validations' do
+    it 'required: trueのフィールドは対応するvalueが必須' do
+      type = create(:person_type)
+      field = add_field(type, name: 'str', input_as: 'string', required: true)
+
+      person = build(:person, person_type: type)
+      person.should be_invalid
+      person.errors[:values].should be_present
+
+      person.values.build(person: person, field: field, string_value: 'MyString')
+      person.should be_valid
+    end
+  end
+
   describe '#dynamic' do
     it 'field.nameとvalueのHashを返す' do
       type = create(:person_type)
