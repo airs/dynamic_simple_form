@@ -3,7 +3,7 @@ require 'active_record'
 Bundler.require(:test, :default)
 
 ActiveRecord::Base.establish_connection adapter: 'sqlite3', database: ':memory:'
-ActiveRecord::Base.send(:include, DynamicSimpleForm::Root)
+ActiveRecord::Base.send(:include, DynamicSimpleForm::Macro)
 
 RSpec.configure do |config|
   config.treat_symbols_as_metadata_keys_with_true_values = true
