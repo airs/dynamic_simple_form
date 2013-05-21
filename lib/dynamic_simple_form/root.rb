@@ -80,7 +80,10 @@ module DynamicSimpleForm
       field = find_type_field(name)
       return super if field.nil?
 
-      values.find { |value| value.field_id == field.id }.try(:value)
+      define_singleton_method name do
+        values.find { |value| value.field_id == field.id }.try(:value)
+      end
+      send(name)
     end
 
     # TODO respond_to?, respond_to_missing?

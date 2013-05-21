@@ -149,6 +149,7 @@ describe DynamicSimpleForm::Root do
 
     it 'fieldのnameでアクセスできる' do
       person.str.should == 'MyString'
+      person.should be_respond_to(:str)
       person.int.should == nil
       expect { person.notexist }.to raise_error(NoMethodError)
     end
