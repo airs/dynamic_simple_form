@@ -42,6 +42,21 @@ describe DynamicSimpleForm::FieldValue do
     end
   end
 
+  describe '#value=' do
+    let!(:str_field) { add_field(type, input_as: 'string') }
+    let!(:int_field) { add_field(type, input_as: 'integer') }
+
+    it 'fieldのタイプに合わせた列に値が設定される' do
+      str = person.values.build(field: str_field)
+      str.value = 'str'
+      str.string_value.should == 'str'
+
+      int = person.values.build(field: int_field)
+      int.value = 10
+      int.integer_value.should == 10
+    end
+  end
+
   describe '#file_value' do
     let(:field) { add_field(type, input_as: 'file') }
 

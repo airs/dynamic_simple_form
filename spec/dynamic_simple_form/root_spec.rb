@@ -147,11 +147,20 @@ describe DynamicSimpleForm::Root do
       person
     end
 
-    it 'fieldのnameでアクセスできる' do
+    it '属性としてアクセスできる' do
       person.str.should == 'MyString'
       person.should be_respond_to(:str)
       person.int.should == nil
       expect { person.notexist }.to raise_error(NoMethodError)
+    end
+
+    it '属性として設定できる' do
+      person.str = 'NewString'
+      person.should be_respond_to(:str=)
+      person.str.should == 'NewString'
+      person.int = 10
+      person.int.should == 10
+      expect { person.notexist = 20 }.to raise_error(NoMethodError)
     end
   end
 end

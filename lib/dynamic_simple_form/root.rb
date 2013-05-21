@@ -24,14 +24,38 @@ module DynamicSimpleForm
       end
     end
 
-    def method_missing(name, *args, &block)
-      field = find_type_field(name)
+    def method_missing(method_name, *args, &block)
+      type, attribute = if method_name.to_s.end_with?('=')
+        [:write, method_name[0..-2]]
+      else
+        [:read, method_name]
+      end
+
+      field = find_type_field(attribute)
       return super if field.nil?
 
-      define_singleton_method name do
+      case type
+      when :write
+        define_and_write(field, args[0])
+      when :read
+        define_and_read(field)
+      end
+    end
+
+    def define_and_write(field, value)
+      define_singleton_method "#{field.name}=" do |set_value|
+        field_value = values.find { |value| value.field_id == field.id }
+        field_value = values.build(field: field) if field_value.nil?
+        field_value.value = set_value
+      end
+      send("#{field.name}=", value)
+    end
+
+    def define_and_read(field)
+      define_singleton_method field.name do
         values.find { |value| value.field_id == field.id }.try(:value)
       end
-      send(name)
+      send(field.name)
     end
 
     # TODO respond_to?, respond_to_missing?

@@ -28,7 +28,7 @@ RSpec.configure do |config|
 end
 
 # Migrationログを無効化
-$stdout = StringIO.new
+ActiveRecord::Migration.verbose = false
 
 ActiveRecord::Schema.define(version: 1) do
   # rails generate dynamic_simple_form person
