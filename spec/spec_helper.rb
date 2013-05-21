@@ -127,7 +127,7 @@ end
 def set_value(person, field_or_name, value)
   field = field_or_name.is_a?(PersonField) ?
       field_or_name :
-      person.person_type.fields.find_by!(name: field_or_name.to_s)
+      person.person_type.fields.find_by_name!(field_or_name.to_s)
   person.values.create(attributes_for(:person_field_value_base, person_field_id: field.id, field.input.column => value))
 end
 

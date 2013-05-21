@@ -137,13 +137,16 @@ describe DynamicSimpleForm::Root do
   end
 
   describe '#method_missing' do
-    let(:person) do
+    let(:type) do
       type = create(:person_type)
-      str_field = add_field(type, name: 'str', input_as: 'string')
-      int_field = add_field(type, name: 'int', input_as: 'integer')
+      add_field(type, name: 'str', input_as: 'string')
+      add_field(type, name: 'int', input_as: 'integer')
+      type
+    end
 
+    let(:person) do
       person = create(:person, person_type: type)
-      set_value(person, str_field, 'MyString')
+      set_value(person, 'str', 'MyString')
       person
     end
 
@@ -168,6 +171,13 @@ describe DynamicSimpleForm::Root do
       person.int = 10
       person.int.should == 10
       expect { person.notexist = 20 }.to raise_error(NoMethodError)
+    end
+
+    it '属性を設定してrootごと保存できる' do
+      person = build(:person, person_type: type)
+      person.str = 'MyString'
+      person.save!
+      person.reload.dynamic.should == { 'str' => 'MyString' }
     end
   end
 end

@@ -50,6 +50,7 @@ module DynamicSimpleForm
       define_singleton_method "#{field.name}=" do |set_value|
         field_value = values.find { |value| value.field_id == field.id }
         field_value = values.build(field: field) if field_value.nil?
+        field_value.send("#{self.class.to_s.underscore}=", self)
         field_value.value = set_value
       end
       send("#{field.name}=", value)
