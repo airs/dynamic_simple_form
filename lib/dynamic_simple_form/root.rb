@@ -37,14 +37,21 @@ module DynamicSimpleForm
         end
 
         value_class_name.constantize.class_eval do
+          define_singleton_method :field_foreign_key do
+            "#{field_class_name.underscore}_id"
+          end
           belongs_to root_class_name.underscore.to_sym
           alias_method :dynamic_value_root, root_class_name.underscore.to_sym
-          belongs_to :field, class_name: field_class_name, foreign_key: "#{field_class_name.underscore}_id"
+          belongs_to :field, class_name: field_class_name, foreign_key: field_foreign_key
 
           validates root_class_name.underscore.to_sym, presence: true
 
           scope :ordered, -> { joins(:field).merge(field_class_name.constantize.ordered) }
           scope :list_items, -> { joins(:field).merge(field_class_name.constantize.list_items) }
+
+          def field_id
+            self.send(self.class.field_foreign_key)
+          end
 
           include DynamicSimpleForm::FieldValue
         end
@@ -67,6 +74,19 @@ module DynamicSimpleForm
       values.each_with_object(HashWithIndifferentAccess.new) do |value, hash|
         hash[value.field.name] = value.value
       end
+    end
+
+    def method_missing(name, *args, &block)
+      field = find_type_field(name)
+      return super if field.nil?
+
+      values.find { |value| value.field_id == field.id }.try(:value)
+    end
+
+    # TODO respond_to?, respond_to_missing?
+
+    def find_type_field(name)
+      dynamic_value_type && dynamic_value_type.fields.find { |field| field.name == name.to_s }
     end
   end
 end

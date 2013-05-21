@@ -135,4 +135,22 @@ describe DynamicSimpleForm::Root do
       person.dynamic[:str].should == 'MyString'
     end
   end
+
+  describe '#method_missing' do
+    let(:person) do
+      type = create(:person_type)
+      str_field = add_field(type, name: 'str', input_as: 'string')
+      int_field = add_field(type, name: 'int', input_as: 'integer')
+
+      person = create(:person, person_type: type)
+      set_value(person, str_field, 'MyString')
+      person
+    end
+
+    it 'fieldのnameでアクセスできる' do
+      person.str.should == 'MyString'
+      person.int.should == nil
+      expect { person.notexist }.to raise_error(NoMethodError)
+    end
+  end
 end
