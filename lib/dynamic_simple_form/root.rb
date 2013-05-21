@@ -25,11 +25,7 @@ module DynamicSimpleForm
     end
 
     def method_missing(method_name, *args, &block)
-      type, attribute = if method_name.to_s.end_with?('=')
-        [:write, method_name[0..-2]]
-      else
-        [:read, method_name]
-      end
+      type, attribute = get_field_type_and_name(method_name)
 
       field = find_type_field(attribute)
       return super if field.nil?
@@ -39,6 +35,14 @@ module DynamicSimpleForm
         define_and_write(field, args[0])
       when :read
         define_and_read(field)
+      end
+    end
+
+    def get_field_type_and_name(method_name)
+      if method_name.to_s.end_with?('=')
+        [:write, method_name[0..-2]]
+      else
+        [:read, method_name]
       end
     end
 
@@ -58,7 +62,10 @@ module DynamicSimpleForm
       send(field.name)
     end
 
-    # TODO respond_to?, respond_to_missing?
+    def respond_to_missing?(method_name, include_private = false)
+      *, field_name = get_field_type_and_name(method_name)
+      !!find_type_field(field_name) || super
+    end
 
     def find_type_field(name)
       dynamic_value_type && dynamic_value_type.fields.find { |field| field.name == name.to_s }

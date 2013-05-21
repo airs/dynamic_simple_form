@@ -154,6 +154,13 @@ describe DynamicSimpleForm::Root do
       expect { person.notexist }.to raise_error(NoMethodError)
     end
 
+    it 'respond_to?' do
+      person.should be_respond_to_missing(:str)
+      person.should_not be_respond_to_missing(:notexist)
+      person.should be_respond_to(:str)
+      person.should_not be_respond_to(:notexist)
+    end
+
     it '属性として設定できる' do
       person.str = 'NewString'
       person.should be_respond_to(:str=)
