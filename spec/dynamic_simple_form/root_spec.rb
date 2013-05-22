@@ -3,16 +3,26 @@ require 'spec_helper'
 
 describe DynamicSimpleForm::Root do
   describe 'validations' do
-    it 'required: trueのフィールドは対応するvalueが必須' do
+    it 'required: trueのフィールドに対応するvalueは必須' do
       type = create(:person_type)
       field = add_field(type, name: 'str', input_as: 'string', required: true)
 
       person = build(:person, person_type: type)
       person.should be_invalid
-      person.errors[:values].should be_present
+      person.errors[:str].should be_present
 
       person.values.build(person: person, field: field, string_value: 'MyString')
       person.should be_valid
+    end
+
+    it 'valuesのvalidationエラーをrootのものとして取得できる' do
+      type = create(:person_type)
+      int_field = add_field(type, name: 'int', input_as: 'integer')
+
+      person = build(:person, person_type: type)
+      person.values.build(person: person, field: int_field, integer_value: 'a')
+      person.valid?
+      person.errors[:int].should == [person.errors.generate_message(:int, :not_a_number)]
     end
   end
 

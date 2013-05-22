@@ -4,6 +4,7 @@ module DynamicSimpleForm
 
     included do
       validate :validate_missing_value
+      after_validation :copy_values_errors
     end
 
     def validate_missing_value
@@ -12,8 +13,17 @@ module DynamicSimpleForm
       dynamic_value_type.fields.where(required: true).each do |field|
         value = values.find { |v| v.field == field }
         if value.nil?
-          errors.add(:values, :blank)
+          errors.add(field.name, :blank)
           return
+        end
+      end
+    end
+
+    def copy_values_errors
+      values.each do |value|
+        next if value.field.blank? || value.field.input.nil?
+        value.errors[value.field.input.column].each do |error|
+          self.errors.add(value.field.name, error)
         end
       end
     end
