@@ -82,5 +82,14 @@ describe DynamicSimpleForm::Root do
       person.save!
       person.reload.dynamic.should == { 'str' => 'MyString' }
     end
+
+    it 'multiparameter assignmentに対応する' do
+      type = create(:person_type)
+      add_field(type, name: 'date', input_as: 'date')
+
+      person = build(:person, person_type: type)
+      person.update_attributes!('date(1i)' => '2012', 'date(2i)' => '2', 'date(3i)' => '1')
+      person.date.should == Date.new(2012, 2, 1)
+    end
   end
 end

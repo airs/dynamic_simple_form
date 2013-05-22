@@ -81,5 +81,17 @@ module DynamicSimpleForm
     def find_type_field(name)
       dynamic_value_type && dynamic_value_type.fields.find { |field| field.name == name.to_s }
     end
+
+    def column_for_attribute(name)
+      s = super
+      return s if s
+
+      return unless dynamic_value_type
+
+      field = dynamic_value_type.fields.find { |field| field.name == name }
+      return unless field
+
+      self.class.value_class.columns_hash[field.input.column.to_s]
+    end
   end
 end
