@@ -3,7 +3,7 @@ require 'active_record'
 Bundler.require(:test, :default)
 
 ActiveRecord::Base.establish_connection adapter: 'sqlite3', database: ':memory:'
-ActiveRecord::Base.send(:include, DynamicSimpleForm::Root)
+ActiveRecord::Base.send(:include, DynamicSimpleForm::Macro)
 
 RSpec.configure do |config|
   config.treat_symbols_as_metadata_keys_with_true_values = true
@@ -28,7 +28,7 @@ RSpec.configure do |config|
 end
 
 # Migrationログを無効化
-$stdout = StringIO.new
+ActiveRecord::Migration.verbose = false
 
 ActiveRecord::Schema.define(version: 1) do
   # rails generate dynamic_simple_form person
@@ -127,7 +127,7 @@ end
 def set_value(person, field_or_name, value)
   field = field_or_name.is_a?(PersonField) ?
       field_or_name :
-      person.person_type.fields.find_by!(name: field_or_name.to_s)
+      person.person_type.fields.find_by_name!(field_or_name.to_s)
   person.values.create(attributes_for(:person_field_value_base, person_field_id: field.id, field.input.column => value))
 end
 
