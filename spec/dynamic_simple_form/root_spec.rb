@@ -2,124 +2,27 @@
 require 'spec_helper'
 
 describe DynamicSimpleForm::Root do
-  context 'デフォルト設定のとき' do
-    ActiveRecord::Schema.define(version: 1) do
-      create_table :my_customer_types do |t|
-      end
-
-      create_table :my_customer_fields do |t|
-        t.references :my_customer_type, index: true
-      end
-
-      create_table :my_customers do |t|
-        t.references :my_customer_type, index: true
-      end
-
-      create_table :my_customer_field_values do |t|
-        t.references :my_customer, index: true
-        t.references :my_customer_field, index: true
-      end
-    end
-
-    class MyCustomerType < ActiveRecord::Base; end
-    class MyCustomerField < ActiveRecord::Base; end
-    class MyCustomerFieldValue < ActiveRecord::Base; end
-
-    class MyCustomer < ActiveRecord::Base
-      dynamic_simple_form
-    end
-
-    describe MyCustomer do
-      subject { MyCustomer.new }
-      it { should belong_to(:my_customer_type) }
-      it { should have_many(:values).class_name('MyCustomerFieldValue').dependent(:destroy) }
-    end
-
-    describe MyCustomerType do
-      subject { MyCustomerType.new }
-      it { should have_many(:my_customers).dependent(:destroy) }
-      it { should have_many(:fields).class_name('MyCustomerField').dependent(:destroy) }
-    end
-
-    describe MyCustomerField do
-      subject { MyCustomerField.new }
-      it { should belong_to(:my_customer_type) }
-      it { should have_many(:values).class_name('MyCustomerFieldValue').dependent(:destroy) }
-    end
-
-    describe MyCustomerFieldValue do
-      subject { MyCustomerFieldValue.new }
-      it { should belong_to(:my_customer) }
-      it { should belong_to(:field).class_name('MyCustomerField') }
-    end
-  end
-
-
-  context 'オプションでカスタマイズするとき' do
-    ActiveRecord::Schema.define(version: 1) do
-      create_table :custom_types do |t|
-      end
-
-      create_table :custom_fields do |t|
-        t.references :custom_type, index: true
-      end
-
-      create_table :users do |t|
-        t.references :custom_type, index: true
-      end
-
-      create_table :field_values do |t|
-        t.references :user, index: true
-        t.references :custom_field, index: true
-      end
-    end
-
-    class CustomType < ActiveRecord::Base; end
-    class CustomField < ActiveRecord::Base; end
-    class FieldValue < ActiveRecord::Base; end
-
-    class User < ActiveRecord::Base
-      dynamic_simple_form(type_class: 'CustomType', type_dependent: :nullify,
-                          field_class: CustomField,
-                          value_class: 'FieldValue')
-    end
-
-    describe User do
-      subject { User.new }
-      it { should belong_to(:custom_type) }
-      it { should have_many(:values).class_name('FieldValue') }
-    end
-
-    describe CustomType do
-      subject { CustomType.new }
-      it { should have_many(:users).dependent(:nullify) }
-      it { should have_many(:fields).class_name('CustomField') }
-    end
-
-    describe CustomField do
-      subject { CustomField.new }
-      it { should belong_to(:custom_type) }
-      it { should have_many(:values).class_name('FieldValue') }
-    end
-
-    describe FieldValue do
-      subject { FieldValue.new }
-      it { should belong_to(:user) }
-      it { should belong_to(:field).class_name('CustomField') }
-    end
-  end
-
   describe 'validations' do
-    it 'required: trueのフィールドは対応するvalueが必須' do
+    it 'required: trueのフィールドに対応するvalueは必須' do
       type = create(:person_type)
       field = add_field(type, name: 'str', input_as: 'string', required: true)
 
       person = build(:person, person_type: type)
       person.should be_invalid
-      person.errors[:values].should be_present
+      person.errors[:str].should be_present
 
       person.values.build(person: person, field: field, string_value: 'MyString')
       person.should be_valid
+    end
+
+    it 'valuesのvalidationエラーをrootのものとして取得できる' do
+      type = create(:person_type)
+      int_field = add_field(type, name: 'int', input_as: 'integer')
+
+      person = build(:person, person_type: type)
+      person.values.build(person: person, field: int_field, integer_value: 'a')
+      person.valid?
+      person.errors[:int].should == [person.errors.generate_message(:int, :not_a_number)]
     end
   end
 
@@ -133,6 +36,60 @@ describe DynamicSimpleForm::Root do
       set_value(person, int_field, 10)
       person.dynamic.should == { 'str' => 'MyString', 'int' => 10 }
       person.dynamic[:str].should == 'MyString'
+    end
+  end
+
+  describe '#method_missing' do
+    let(:type) do
+      type = create(:person_type)
+      add_field(type, name: 'str', input_as: 'string')
+      add_field(type, name: 'int', input_as: 'integer')
+      type
+    end
+
+    let(:person) do
+      person = create(:person, person_type: type)
+      set_value(person, 'str', 'MyString')
+      person
+    end
+
+    it '属性としてアクセスできる' do
+      person.str.should == 'MyString'
+      person.should be_respond_to(:str)
+      person.int.should == nil
+      expect { person.notexist }.to raise_error(NoMethodError)
+    end
+
+    it 'respond_to?' do
+      person.should be_respond_to_missing(:str)
+      person.should_not be_respond_to_missing(:notexist)
+      person.should be_respond_to(:str)
+      person.should_not be_respond_to(:notexist)
+    end
+
+    it '属性として設定できる' do
+      person.str = 'NewString'
+      person.should be_respond_to(:str=)
+      person.str.should == 'NewString'
+      person.int = 10
+      person.int.should == 10
+      expect { person.notexist = 20 }.to raise_error(NoMethodError)
+    end
+
+    it '属性を設定してrootごと保存できる' do
+      person = build(:person, person_type: type)
+      person.str = 'MyString'
+      person.save!
+      person.reload.dynamic.should == { 'str' => 'MyString' }
+    end
+
+    it 'multiparameter assignmentに対応する' do
+      type = create(:person_type)
+      add_field(type, name: 'date', input_as: 'date')
+
+      person = build(:person, person_type: type)
+      person.update_attributes!('date(1i)' => '2012', 'date(2i)' => '2', 'date(3i)' => '1')
+      person.date.should == Date.new(2012, 2, 1)
     end
   end
 end

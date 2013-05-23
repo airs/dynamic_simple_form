@@ -19,6 +19,10 @@ module DynamicSimpleForm
       self.send("#{field.input.column}_before_type_cast")
     end
 
+    def value=(value)
+      send("#{field.input.column}=", value)
+    end
+
     def validate_field
       return unless field && dynamic_value_root
 
